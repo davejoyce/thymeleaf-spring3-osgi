@@ -1,6 +1,158 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.thymeleaf</groupId>
-  <artifactId>thymeleaf-spring3-osgi</artifactId>
-  <version>2.0.14-SNAPSHOT</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.thymeleaf</groupId>
+	<artifactId>thymeleaf-spring3-osgi</artifactId>
+	<version>2.0.14-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+
+	<url>http://www.thymeleaf.org</url>
+	<name>Thymeleaf-Spring3 (OSGi Bundle)</name>
+	<description>OSGi bundle packaging of Thymeleaf integration module for Spring 3</description>
+
+	<organization>
+		<name>The THYMELEAF team</name>
+		<url>http://www.thymeleaf.org</url>
+	</organization>
+
+	<scm>
+		<url>scm:git:git@github.com:davejoyce/thymeleaf-spring3-osgi.git</url>
+		<connection>scm:git:git@github.com:davejoyce/thymeleaf-spring3-osgi.git</connection>
+		<developerConnection>scm:git:git@github.com:davejoyce/thymeleaf-spring3-osgi.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>dfernandez</id>
+			<name>Daniel Fernandez</name>
+			<email>daniel.fernandez AT 11thlabs DOT org</email>
+			<roles>
+				<role>Project admin</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>davejoyce</id>
+			<name>Dave Joyce</name>
+			<email>dave AT osframework DOT org</email>
+			<roles>
+				<role>OSGi bundle-izer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<bundle.symbolicName>${project.groupId}.thymeleaf-spring3</bundle.symbolicName>
+		<bundle.namespace>${project.groupId}.spring3</bundle.namespace>
+		
+		<!-- Dependency versions -->
+		<servlet-api.version>2.5</servlet-api.version>
+		<slf4j-api.version>1.6.1</slf4j-api.version>
+		<spring.version>3.0.7.RELEASE</spring.version>
+		<springwebflow.version>2.3.1.RELEASE</springwebflow.version>
+	</properties>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>.</directory>
+				<targetPath>META-INF</targetPath>
+				<includes>
+					<include>LICENSE.txt</include>
+					<include>NOTICE.txt</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Name>Thymeleaf Spring3 Integration</Bundle-Name>
+						<Bundle-Description>Thymeleaf integration module for Spring 3</Bundle-Description>
+						<Export-Package>${bundle.namespace}.*;version="${project.version}",
+						                org.springframework.web.servlet.tags.form</Export-Package>
+						<Import-Package>org.slf4j;version="[${slf4j-api.version},${slf4j-api.version}]",
+						                javax.servlet;version="2.5",
+						                javax.servlet.http;version="2.5",
+						                org.springframework.beans;version="[${spring.version},3.1)",
+						                org.springframework.beans.factory;version="[${spring.version},3.1)",
+						                org.springframework.beans.factory.config;version="[${spring.version},3.1)",
+						                org.springframework.context;version="[${spring.version},3.1)",
+						                org.springframework.core;version="[${spring.version},3.1)",
+						                org.springframework.expression;version="[${spring.version},3.1)",
+						                org.springframework.expression.spel.standard;version="[${spring.version},3.1)",
+						                org.springframework.expression.spel.support;version="[${spring.version},3.1)",
+						                org.springframework.js.ajax;version="[${spring.version},3.1)",
+						                org.springframework.util;version="[${spring.version},3.1)",
+						                org.springframework.web.context.support;version="[${spring.version},3.1)",
+						                org.springframework.web.servlet;version="[${spring.version},3.1)",
+						                org.springframework.web.servlet.support;version="[${spring.version},3.1)",
+						                org.springframework.web.servlet.view;version="[${spring.version},3.1)",
+						                org.springframework.webflow.core.collection;version="[${springwebflow.version},2.4)",
+						                org.springframework.webflow.execution;version="[${springwebflow.version},2.4)",
+						                org.thymeleaf;version="[${project.version},${project.version}]",
+						                org.thymeleaf.cache;version="[${project.version},${project.version}]",
+						                org.thymeleaf.context;version="[${project.version},${project.version}]",
+						                org.thymeleaf.dialect;version="[${project.version},${project.version}]",
+						                org.thymeleaf.doctype;version="[${project.version},${project.version}]",
+						                org.thymeleaf.doctype.resolution;version="[${project.version},${project.version}]",
+						                org.thymeleaf.doctype.translation;version="[${project.version},${project.version}]",
+						                org.thymeleaf.dom;version="[${project.version},${project.version}]",
+						                org.thymeleaf.exceptions;version="[${project.version},${project.version}]",
+						                org.thymeleaf.fragment;version="[${project.version},${project.version}]",
+						                org.thymeleaf.messageresolver;version="[${project.version},${project.version}]",
+						                org.thymeleaf.processor;version="[${project.version},${project.version}]",
+						                org.thymeleaf.processor.attr;version="[${project.version},${project.version}]",
+						                org.thymeleaf.standard;version="[${project.version},${project.version}]",
+						                org.thymeleaf.standard.expression;version="[${project.version},${project.version}]",
+						                org.thymeleaf.standard.processor.attr;version="[${project.version},${project.version}]",
+						                org.thymeleaf.templatemode;version="[${project.version},${project.version}]",
+						                org.thymeleaf.templateparser;version="[${project.version},${project.version}]",
+						                org.thymeleaf.templateresolver;version="[${project.version},${project.version}]",
+						                org.thymeleaf.util;version="[${project.version},${project.version}]"</Import-Package>
+						<Embed-Dependency>*;scope=compile;inline=true;artifactId=!slf4j-api</Embed-Dependency>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>thymeleaf-spring3</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 </project>
